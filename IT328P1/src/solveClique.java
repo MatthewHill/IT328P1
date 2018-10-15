@@ -5,6 +5,18 @@ import java.util.List;
 import java.util.Scanner;
 
 public class solveClique {
+	public static ArrayList BronKerbosch1(ArrayList R, ArrayList P, ArrayList X)
+	{
+		if(P.isEmpty() && X.isEmpty())
+		{
+			return R;
+		}
+		for(int i = 0; i < P.size();i++)
+		{
+		//	BronKerbosch1()
+		}
+		return X;
+	}
 	public static void main(String[] args){
 	/*Student A will write a method that can find an k-clique, if such clique exists, for any given
 	undirected graph and integer k >= 1.*/
@@ -28,7 +40,10 @@ G60 (60,1403) {11,13,19,20,21,26,32,37,38,43,44,47,48,51,56,59} (size=16, 10487 
 		int totaledges = 0; //(number of 1's - number of vertices) /2
 		int maxedges = 0;
 		int vertices = 0;
+		int time =0;
 		int graphnumber = 1;
+		int pivot = 0;
+		int adjacentCounter = 0;
 	Scanner sc2 = null;{
 	try{
 		sc2 = new Scanner(new File("graphs18.txt"));
@@ -39,45 +54,58 @@ G60 (60,1403) {11,13,19,20,21,26,32,37,38,43,44,47,48,51,56,59} (size=16, 10487 
 		Scanner vertexCount = new Scanner(sc2.nextLine());
 		vertices = Integer.parseInt(vertexCount.next());
 		vertexCount.close();
+		//Read the graph into a 2d array
+		int graph[][] = new int [vertices][vertices];
+		ArrayList maxClique = new ArrayList();
 		totaledges = 0;
 		maxedges = 0;
 		for(int i = 0; i < vertices; i++)
 		{
+		ArrayList P = new ArrayList();
+		ArrayList R = new ArrayList();
+		R.add(i);
+		ArrayList X = new ArrayList();
 		Scanner s2 = new Scanner(sc2.nextLine());
 		edges = 0;
+		adjacentCounter = 0;
+		int j = 0;
 		while (s2.hasNext()){
 			int s = Integer.parseInt(s2.next());
+			graph[i][j] = s;
 			if(s == 1)
 			{
+				P.add(adjacentCounter);
 				edges++;
 				totaledges++;
 			}
+			adjacentCounter++;
+			j++;
 		}
 		if(edges > maxedges)
 		{
 			maxedges = edges;
+			pivot = i;
 		}
 		s2.close();
 	}
+		
+		//R.add(pivot);
+		
+		int cliqueSize = maxClique.size();
 		totaledges = ((totaledges-vertices)/2);
-		System.out.println("G" + graphnumber + " (" + vertices + ", "+totaledges +") " );
+		System.out.println("G" + graphnumber + " (" + vertices + ", "+totaledges +") " + maxClique + "(size=" + cliqueSize + ", " + time + " ms)");
 		graphnumber++;
-	/*List<V> P= new ArrayList<V>();
-	
-	for(int i=0; i < vertices; i++)
-	{
-		for(int j=0; j < vertices; j++)
+		//test print of graph
+		for(int i =0; i < vertices; i++)
 		{
-			if(line.next = 1)
+			for(int j = 0; j < vertices; j++)
 			{
-				edges++;
+				System.out.print(graph[i][j]);
 			}
+			System.out.println();
 		}
-		if(edges > maxedges)
-		{
-			maxedges = edges;
-		}
-	}*/
+
+
 }
 	}
 }
