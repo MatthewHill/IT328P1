@@ -5,17 +5,32 @@ import java.util.List;
 import java.util.Scanner;
 
 public class solveClique {
-	public static ArrayList BronKerbosch1(ArrayList R, ArrayList P, ArrayList X)
+	public static ArrayList BronKerbosch1(ArrayList R, ArrayList P, ArrayList X, int graph[][])
 	{
+		//temp print out of R, P, X
+		//System.out.println("R: " + R);
+		//System.out.println("P: " + P);
+		//System.out.println("X: " + X);
 		if(P.isEmpty() && X.isEmpty())
 		{
 			return R;
 		}
-		for(int i = 0; i < P.size();i++)
+		R.add(P.get(0));   //moving a point from P to R
+		P.remove(0);
+		for(int i = 0; i < R.size();i++)  // going through the new R and creating a new P based on it
 		{
-		//	BronKerbosch1()
+			for(int j = 0; j < P.size();j++)
+			{
+				if(graph[(int) R.get(i)][(int) P.get(j)] == 0) //each point in R is not connected to every point in P
+				{
+					//Remove that point in P
+					P.remove(j);
+					j--;  //i'm removing one from j because the list will shift left.
+				}
+			}
 		}
-		return X;
+		BronKerbosch1(R, P, X, graph);
+		return R;
 	}
 	public static void main(String[] args){
 	/*Student A will write a method that can find an k-clique, if such clique exists, for any given
@@ -40,7 +55,6 @@ G60 (60,1403) {11,13,19,20,21,26,32,37,38,43,44,47,48,51,56,59} (size=16, 10487 
 		int totaledges = 0; //(number of 1's - number of vertices) /2
 		int maxedges = 0;
 		int vertices = 0;
-		int time =0;
 		int graphnumber = 1;
 		int pivot = 0;
 		int adjacentCounter = 0;
@@ -51,6 +65,7 @@ G60 (60,1403) {11,13,19,20,21,26,32,37,38,43,44,47,48,51,56,59} (size=16, 10487 
 		e.printStackTrace();
 	}
 	while(sc2.hasNextLine()){
+		long startTime = System.nanoTime();
 		Scanner vertexCount = new Scanner(sc2.nextLine());
 		vertices = Integer.parseInt(vertexCount.next());
 		vertexCount.close();
@@ -59,14 +74,15 @@ G60 (60,1403) {11,13,19,20,21,26,32,37,38,43,44,47,48,51,56,59} (size=16, 10487 
 		ArrayList maxClique = new ArrayList();
 		totaledges = 0;
 		maxedges = 0;
-		for(int i = 0; i < vertices; i++)
-		{
 		ArrayList P = new ArrayList();
 		ArrayList R = new ArrayList();
-		R.add(i);
 		ArrayList X = new ArrayList();
+		for(int i = 0; i < vertices; i++)
+		{
+		
 		Scanner s2 = new Scanner(sc2.nextLine());
 		edges = 0;
+		ArrayList tempP = new ArrayList();
 		adjacentCounter = 0;
 		int j = 0;
 		while (s2.hasNext()){
@@ -74,7 +90,10 @@ G60 (60,1403) {11,13,19,20,21,26,32,37,38,43,44,47,48,51,56,59} (size=16, 10487 
 			graph[i][j] = s;
 			if(s == 1)
 			{
-				P.add(adjacentCounter);
+				if(i != j)
+				{
+				tempP.add(adjacentCounter);
+				}
 				edges++;
 				totaledges++;
 			}
@@ -85,25 +104,29 @@ G60 (60,1403) {11,13,19,20,21,26,32,37,38,43,44,47,48,51,56,59} (size=16, 10487 
 		{
 			maxedges = edges;
 			pivot = i;
+			P = tempP;
 		}
 		s2.close();
 	}
 		
-		//R.add(pivot);
+		R.add(pivot);
+		maxClique = BronKerbosch1(R, P, X, graph);
 		
 		int cliqueSize = maxClique.size();
 		totaledges = ((totaledges-vertices)/2);
-		System.out.println("G" + graphnumber + " (" + vertices + ", "+totaledges +") " + maxClique + "(size=" + cliqueSize + ", " + time + " ms)");
+		long endTime = System.nanoTime();
+		long duration = ((endTime - startTime)/1000000);
+		System.out.println("G" + graphnumber + " (" + vertices + ", "+totaledges +") " + maxClique + "(size=" + cliqueSize + ", " + duration + " ms)");
 		graphnumber++;
 		//test print of graph
-		for(int i =0; i < vertices; i++)
+		/*for(int i =0; i < vertices; i++)
 		{
 			for(int j = 0; j < vertices; j++)
 			{
 				System.out.print(graph[i][j]);
 			}
 			System.out.println();
-		}
+		}*/
 
 
 }
